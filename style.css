@@ -1,0 +1,109 @@
+
+body {
+  background-color: #000;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 2rem;
+}
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+.card {
+  background-color: #111;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 360px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.card h2, .card h3 {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+.card p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.total {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.status, .ai {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  background: #222;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+.legend {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+.legend li {
+  margin: 0.3rem 0;
+  display: flex;
+  align-items: center;
+}
+.dot {
+  height: 12px;
+  width: 12px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.purple { background-color: #a259ff; }
+.gold { background-color: #f1c40f; }
+.blue { background-color: #3498db; }
+.green { background-color: #2ecc71; }
+.grey { background-color: #95a5a6; }
+.red { background-color: #e74c3c; }
+.orange { background-color: #e67e22; }
+.chart-total {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #fff;
+}
+.upload-section {
+  margin-top: 3rem;
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+}
+.ai-card {
+  background-color: #111;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+#breakdownCard.visible, .ai-card.visible {
+  display: block !important;
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+#lang-toggle-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #111;
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+#langSelect {
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+}

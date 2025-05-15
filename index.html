@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wealth Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <section class="card">
+      <h1>Wealth Dashboard</h1>
+      <p class="total">Total Assets<br><strong>$325,800</strong></p>
+      <canvas id="mainChart" width="250" height="250"></canvas>
+      <div class="chart-total" id="mainTotal">$325,800</div>
+      <ul class="legend" id="legendList">
+        <li><span class="dot purple"></span>House – $97,740</li>
+        <li><span class="dot gold"></span>Car – $48,870</li>
+        <li><span class="dot blue"></span>Stocks – $65,160</li>
+        <li><span class="dot green"></span>Crypto – $32,580</li>
+        <li><span class="dot grey"></span>Bank Deposit – $48,870</li>
+      </ul>
+    </section>
+
+    <section class="card visible" id="breakdownCard">
+      <h1>Breakdown</h1>
+      <p class="status">Total Status<br><strong>Well balanced</strong></p>
+      <canvas id="stockChart" width="250" height="250"></canvas>
+      <div class="chart-total" id="stockTotal">$97,740</div>
+      <ul class="legend">
+<ul class="legend">
+  <li><span class="dot red"></span>Apple – $16,660</li>
+  <li><span class="dot orange"></span>Microsoft – $10,630</li>
+  <li><span class="dot blue"></span>Amazon – $9,448</li>
+  <li><span class="dot green"></span>Google – $8,722</li>
+  <li><span class="dot grey"></span>Meta – $7,493</li>
+  <li><span class="dot purple"></span>Other – $10,207</li>
+</ul>
+</ul>
+    </section>
+
+    <section class="card visible ai-card" id="aiCard">
+      <h2>AI Assistant</h2>
+      <p><strong>House (Silicon Valley, Palo Alto):</strong> Property prices in this area are increasing steadily. It is advisable to hold the asset, consider refinancing your mortgage, and potentially rent it out for steady passive income.</p>
+      <p><strong>Crypto (Bitcoin):</strong> Bitcoin has shown positive trends in the last 30 days. Recommendation: hold and monitor market shifts. Consider DCA (dollar-cost averaging) if the trend remains bullish.</p>
+      <h3>Live Crypto Advice</h3>
+      <p><strong>Bitcoin:</strong> $103,492 (−0.72%) – Downtrend 📉. Monitor closely.</p>
+      <p><strong>Ethereum:</strong> $2,598.24 (−3.63%) – Weak ⚠️. Avoid buying now.</p>
+    </section>
+  </div>
+
+  <section class="upload-section">
+    <h2>Upload screenshot with asset values</h2>
+    <input type="file" accept="image/*" id="uploadImage"/>
+    <p style="margin-top:1rem;color:#888">Uses OCR to read and update pie chart</p>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script src="https://unpkg.com/tesseract.js@5.0.1/dist/tesseract.min.js"></script>
+  <script src="script.js"></script>
+
+<div id="lang-toggle-container">
+  <label for="langSelect">🌐</label>
+  <select id="langSelect">
+    <option value="en">EN</option>
+    <option value="ru">RU</option>
+  </select>
+</div>
+</body>
+
+</html>
