@@ -3,7 +3,7 @@ let currentBreakdownLabel = null;
 let mainChart;
 let stockChart;
 
-// Объекты данных
+// Объекты данных - теперь на английском
 const mainData = {
   labels: ['House', 'Car', 'Stocks', 'Crypto', 'Bank Deposit', 'Cash'], 
   datasets: [{ 
@@ -13,62 +13,64 @@ const mainData = {
   }]
 };
 
+// breakdownDataMap будет ЗАПОЛНЯТЬСЯ из Excel или иметь дефолтные значения, если Excel не загружен
+// Дефолтные значения тоже теперь на английском, если они используются до загрузки
 let breakdownDataMap = {
   'House': { 
     data: [
-      { name: 'Primary Home – Palo Alto (Townhouse)', value: 320000, address: '2105 Townhouse Ln, Palo Alto, CA 94303', shortSummary: 'Palo Alto Townhouse: Good entry. 🏠', detailedSummary: 'A modest townhouse located at 2105 Townhouse Ln, Palo Alto, CA 94303. Provides an entry into the desirable Palo Alto market. Area benefits from excellent schools and proximity to tech companies. Potential for steady value increase.' },
-      { name: 'Rental Condo – Detroit (Downtown Loft)', value: 180000, address: 'Loft 3D, The Assembly, Detroit, MI 48226', shortSummary: 'Detroit Loft Rental: Cash flow positive. 🏙️', detailedSummary: 'Rental loft in Detroit\'s revitalizing downtown. Affordable investment with good rental yields ($1,500/month). Property taxes are notable, but overall cash-flow positive. Monitor local economic trends.'}
+      { name: 'Palo Alto Townhouse', value: 320000, notes: '2105 Townhouse Ln, Palo Alto, CA 94303. Good entry to market.'},
+      { name: 'Detroit Loft', value: 180000, notes: 'Unit 3D, The Assembly, Detroit, MI. Cash flow positive.'}
     ],
-    colors: ['#a259ff', '#95a5a6'], total: ''
+    colors: ['#a259ff', '#95a5a6'], total: '$0' // Total будет пересчитан
   },
   'Car': { 
-    data: [ 
-      { name: 'Toyota Camry (2021)', value: 20000, model: 'Camry', year: 2021, shortSummary: 'Toyota Camry (2021): High demand. 🚗 Price: $19k-$21.5k.', detailedSummary: 'Model: Camry, Year: 2021. Market estimate: $19,000 - $21,500. Known for reliability and resale value.'}, 
-      { name: 'BMW X5 (2018)', value: 18000, model: 'X5', year: 2018, shortSummary: 'BMW X5 (2018): Moderate demand. Price: $17k-$20k.', detailedSummary: 'Model: X5, Year: 2018. Market estimate: $17,000 - $20,000. Moderate demand for luxury SUVs.'}, 
-      { name: 'Chevrolet Impala (2004)', value: 2500, model: 'Impala', year: 2004, shortSummary: 'Chevrolet Impala (2004): Low liquidity. SELL. 📉', detailedSummary: 'Model: Impala, Year: 2004. Value: $1,500 - $3,000. Low liquidity, high mileage expected. Recommend selling.'}
+    data: [
+      { name: 'Toyota Camry', value: 20000, notes: '2021. Good condition.'}, 
+      { name: 'BMW X5', value: 18000, notes: '2018. Moderate demand.'}, 
+      { name: 'Old Chevrolet Impala', value: 2500, notes: '2004. For sale.'}
     ],
-    colors: ['#f39c12', '#2980b9', '#e74c3c'], total: ''
+    colors: ['#f39c12', '#2980b9', '#e74c3c'], total: '$0'
   },
   'Stocks': { 
     data: [
-      { name: 'Apple (AAPL)', value: 50000, symbol: 'AAPL', shortSummary: 'AAPL: Strong ecosystem. HOLD. 🍏', detailedSummary: 'Apple reported strong iPhone sales. Vision Pro reviews mixed. AI Action: Hold. Watch Vision Pro adoption & services.' }, 
-      { name: 'Microsoft (MSFT)', value: 45000, symbol: 'MSFT', shortSummary: 'MSFT: Azure & AI dominant. BUY. ☁️', detailedSummary: 'Azure growth impressive. AI (Copilot) focus. Activision integrated. AI Action: Buy on dips.' }, 
-      { name: 'Nvidia (NVDA)', value: 40000, symbol: 'NVDA', shortSummary: 'NVDA: AI leader, high growth. HOLD/BUY. 🚀', detailedSummary: 'Nvidia is a dominant force in AI chips and GPUs. Strong growth in data center and gaming segments. Valuation is high, reflecting growth expectations. AI Action: Hold for long-term growth, consider buying on significant dips if you believe in continued AI expansion.' },
-      { name: 'Amazon (AMZN)', value: 30000, symbol: 'AMZN', shortSummary: 'AMZN: AWS strong, e-comm steady. HOLD. 📦', detailedSummary: 'AWS profit driver. E-commerce steady. Ads growing. AI Action: Hold. Monitor margins & AWS growth.' }, 
-      { name: 'Google (GOOGL)', value: 25000, symbol: 'GOOGL', shortSummary: 'GOOGL: Search leader, AI advancing. HOLD. 🔍', detailedSummary: 'Search dominant. GCP gaining share. AI (Gemini) priority. AI Action: Hold. Watch competition.' }, 
-      { name: 'Mullen Automotive (MULN)', value: 10000, symbol: 'MULN', shortSummary: 'MULN: Highly speculative. High risk. SELL. 📉', detailedSummary: 'Mullen Automotive (MULN): EV company with financial challenges and stock volatility. AI Action: SELL. High-risk, speculative. Reallocate capital.' } 
+      { name: 'Apple Inc.', value: 50000, notes: 'AAPL - Strong ecosystem.'}, 
+      { name: 'Microsoft Corp.', value: 45000, notes: 'MSFT - Azure & AI dominant.'}, 
+      { name: 'Nvidia Corp.', value: 40000, notes: 'NVDA - AI leader.'},
+      { name: 'Amazon.com Inc.', value: 30000, notes: 'AMZN - AWS strong.'}, 
+      { name: 'Alphabet Inc. (Google)', value: 25000, notes: 'GOOGL - Search leader.'}, 
+      { name: 'Nikola Corp', value: 2000, notes: 'NKLA - High risk EV.'} 
     ],
     colors: ['#e74c3c', '#e67e22', '#17a2b8', '#3498db', '#2ecc71', '#a259ff'], 
-    total: ''
+    total: '$0'
   },
   'Crypto': { 
     data: [ 
-      { name: 'Bitcoin (BTC)', value: 75000, symbol: 'BTC', shortSummary: 'BTC: Market leader, post-halving potential. HOLD. 📈', detailedSummary: 'Bitcoin leading cryptocurrency. Halving event typically bullish. Regulatory clarity evolving. AI Action: Hold. Monitor. Consider DCA for long term.'}, 
-      { name: 'Ethereum (ETH)', value: 50000, symbol: 'ETH', shortSummary: 'ETH: Strong ecosystem, L2 growth. HOLD. 🔗', detailedSummary: 'Ethereum "Merge" successful. L2 solutions scaling network. Strong DeFi/NFT ecosystem. AI Action: Hold. Watch L2 adoption and staking.' },
-      { name: 'Solana (SOL)', value: 15000, symbol: 'SOL', shortSummary: 'SOL: Fast L1, ecosystem active. VOLATILE. ⚡', detailedSummary: 'Solana: High transaction speed, growing ecosystem. Past outages a concern. Highly volatile. AI Action: Speculative HOLD. Small allocation.' },
-      { name: 'Chainlink (LINK)', value: 10000, symbol: 'LINK', shortSummary: 'LINK: Oracle network, key infra. HOLD. ⛓️', detailedSummary: 'Chainlink provides decentralized oracle services, crucial for connecting smart contracts with real-world data. Wide adoption. AI Action: Hold. Key infrastructure play in Web3.' }
+      { name: 'Bitcoin', value: 75000, notes: 'BTC - Market leader.'}, 
+      { name: 'Ethereum', value: 50000, notes: 'ETH - Strong ecosystem.' },
+      { name: 'Solana', value: 15000, notes: 'SOL - Fast L1, volatile.' },
+      { name: 'Chainlink', value: 10000, notes: 'LINK - Oracle network.' }
     ], 
     liveAdvice: [ 
         { name: 'Bitcoin', currentPrice: '$65,123', change: '+1.52%', trend: 'Uptrend 📈. Monitor volume.'}, 
         { name: 'Ethereum', currentPrice: '$3,450', change: '+0.88%', trend: 'Stable sideways. Watch for breakout.'}
     ], 
     colors: ['#f39c12', '#8e44ad', '#20c997', '#6610f2'], 
-    total: '' 
+    total: '$0' 
   },
   'Bank Deposit': { 
     data: [ 
-      { name: 'High-Yield Savings (Ally Bank)', value: 120000, bankName: 'Ally Bank', currentRate: '4.20% APY', shortSummary: 'Ally Savings (4.20%): Good for liquid cash. 💰', detailedSummary: 'Held at Ally Bank. Current rate of 4.20% APY is competitive for liquid funds. FDIC insured.' }, 
-      { name: 'CD (Marcus by Goldman Sachs)', value: 80000, bankName: 'Marcus by Goldman Sachs', currentRate: '5.00% APY (1-year CD)', shortSummary: 'Marcus CD (5.00%): Strong fixed rate. 🔒', detailedSummary: '1-year CD at Marcus, offering 5.00% APY. Good for locking in rate for funds not needed immediately.' } 
+      { name: 'Ally Bank Savings', value: 120000, notes: 'Ally Bank - 4.20% APY' }, 
+      { name: 'Marcus CD', value: 80000, notes: 'Marcus by Goldman Sachs - 5.00% APY (1-year)' } 
     ],
-    colors: ['#16a085', '#27ae60'], total: ''
+    colors: ['#16a085', '#27ae60'], total: '$0'
   },
   'Cash': { 
     data: [
-      { name: 'USD Physical & Checking', value: 40000, currency: 'USD', shortSummary: 'USD Cash: Liquidity/emergencies. 💵', detailedSummary: 'Physical USD and checking account balance for immediate liquidity and emergency preparedness. Does not earn significant interest.'},
-      { name: 'EUR Savings (Wise Account)', value: 19500, currency: 'EUR', shortSummary: 'EUR Cash (Wise): Travel/diversification. 💶', detailedSummary: 'Euros in Wise multi-currency account for travel and currency diversification. Check for interest offered on EUR balances.'}
+      { name: 'USD Wallet & Checking', value: 40000, notes: 'Emergency fund & liquidity'},
+      { name: 'EUR Savings (Wise)', value: 19500, notes: 'For travel and diversification'}
     ],
     colors: ['#fd7e14', '#ffc107'],
-    total: ''
+    total: '$0'
   }
 };
 
@@ -76,18 +78,26 @@ initializeChartData();
 
 function initializeChartData() {
   if (typeof mainData === 'undefined' || typeof breakdownDataMap === 'undefined') { return; }
-  Object.keys(breakdownDataMap).forEach(categoryKey => {
-    const category = breakdownDataMap[categoryKey];
-    if (!category || !category.data) { console.warn(`Category or data missing for key: ${categoryKey}`); return; }
-    const categorySum = category.data.reduce((sum, item) => sum + (item.value || 0), 0);
-    category.total = '$' + categorySum.toLocaleString();
-    const mainDataIndex = mainData.labels.indexOf(categoryKey);
-    if (mainDataIndex !== -1) {
+  
+  mainData.labels.forEach((label, index) => {
+    const category = breakdownDataMap[label];
+    if (category && category.data) {
+      const categorySum = category.data.reduce((sum, item) => sum + (item.value || 0) , 0);
+      category.total = '$' + categorySum.toLocaleString();
       if (!mainData.datasets[0]) mainData.datasets[0] = { data: new Array(mainData.labels.length).fill(0) };
       if (mainData.datasets[0].data.length !== mainData.labels.length) {
           mainData.datasets[0].data = new Array(mainData.labels.length).fill(0);
       }
-      mainData.datasets[0].data[mainDataIndex] = categorySum;
+      mainData.datasets[0].data[index] = categorySum;
+    } else if (mainData.datasets[0] && mainData.datasets[0].data) {
+      mainData.datasets[0].data[index] = 0;
+      if (!breakdownDataMap[label]) {
+        const bgColorIndex = mainData.labels.indexOf(label);
+        const defaultColor = (mainData.datasets[0].backgroundColor && mainData.datasets[0].backgroundColor[bgColorIndex]) ? mainData.datasets[0].backgroundColor[bgColorIndex] : '#cccccc';
+        breakdownDataMap[label] = { data: [], colors: [defaultColor], total: '$0' };
+      } else {
+        breakdownDataMap[label].total = '$0';
+      }
     }
   });
   updateTotalAssets(); 
@@ -124,6 +134,7 @@ function updateTotalAssets() {
 function createPercentageDoughnut(ctx, labels, dataValues, colors, chartWidth, chartHeight, onClickHandler = null) {
   if (typeof Chart === 'undefined' || typeof ChartDataLabels === 'undefined' || !ctx) { return null; }
   if (!ctx.canvas) { return null;}
+  
   ctx.canvas.width = chartWidth; ctx.canvas.height = chartHeight;
   ctx.canvas.style.width = `${chartWidth}px`; ctx.canvas.style.height = `${chartHeight}px`;
   try {
@@ -158,6 +169,89 @@ function openDeleteConfirmPopup(itemName, onDeleteConfirm) {
     deleteConfirmPopupOverlayGlobal.style.display = "flex";
 }
 
+function getSimulatedAiInsight(category, item) {
+    const assetName = item.name || "Unnamed Asset";
+    const value = item.value || 0;
+    let notes = item.notes || ""; // Используем заметки из item
+
+    let shortSummary = `${assetName}: $${value.toLocaleString()}`;
+    let detailedSummary = `Asset: ${assetName}, Current Value: $${value.toLocaleString()}. `;
+    let aiAction = "Monitor market conditions.";
+    let specificDetails = {}; // Для хранения извлеченных деталей
+
+    const positiveSentiments = ["shows strong potential.", "is on an upward trend.", "has favorable market conditions.", "is a solid holding."];
+    const neutralSentiments = ["is currently stable.", "shows mixed signals.", "requires careful monitoring.", "is a hold for now."];
+    const negativeSentiments = ["faces some headwinds.", "is in a slight downturn.", "carries notable risk.", "should be reviewed for potential sale."];
+    const newsSnippets = [ "Recent sector analysis suggests growth.", "Market volatility might impact this asset.", "New regulations could affect its value.", "Competitor actions are creating pressure.", "Positive economic indicators are beneficial." ];
+    const randomNews = newsSnippets[Math.floor(Math.random() * newsSnippets.length)];
+
+    if (category === "Stocks") {
+        const tickerMatch = notes.match(/\b([A-Z]{2,5})\b/i);
+        if (tickerMatch) specificDetails.symbol = tickerMatch[0].toUpperCase();
+        shortSummary = `${assetName} (${specificDetails.symbol || 'N/A'}): `;
+        const sentimentRoll = Math.random();
+        if (assetName.toLowerCase().includes("mullen") || assetName.toLowerCase().includes("nikola")) {
+            shortSummary += "High Risk 📉";
+            detailedSummary += `${randomNews} ${negativeSentiments[Math.floor(Math.random() * negativeSentiments.length)]}`;
+            aiAction = "SELL. Highly speculative with poor outlook.";
+        } else if (sentimentRoll < 0.6) { 
+            shortSummary += "Positive Outlook 📈";
+            detailedSummary += `${randomNews} ${positiveSentiments[Math.floor(Math.random() * positiveSentiments.length)]}`;
+            aiAction = "HOLD or consider BUYING on dips.";
+        } else { 
+            shortSummary += "Stable/Monitor 📊";
+            detailedSummary += `${randomNews} ${neutralSentiments[Math.floor(Math.random() * neutralSentiments.length)]}`;
+            aiAction = "HOLD and monitor closely.";
+        }
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else if (category === "Crypto") {
+        const tickerMatch = notes.match(/\b([A-Z]{2,5})\b/i);
+        if (tickerMatch) specificDetails.symbol = tickerMatch[0].toUpperCase();
+        shortSummary = `${assetName} (${specificDetails.symbol || 'N/A'}): Volatile ⚡`;
+        detailedSummary += `${randomNews} Cryptocurrencies are inherently volatile. ${neutralSentiments[Math.floor(Math.random() * neutralSentiments.length)]}`;
+        aiAction = "HOLD with caution. Long-term potential but high risk.";
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else if (category === "House") {
+        shortSummary = `${assetName}: Real Estate 🏡`;
+        if (notes) specificDetails.address = notes; // Предполагаем, что все заметки - это адрес
+        detailedSummary += `Location: ${specificDetails.address || 'N/A'}. ${randomNews} Real estate in this area ${positiveSentiments[Math.floor(Math.random() * positiveSentiments.length)]}`;
+        aiAction = assetName.toLowerCase().includes("rental") || (notes && notes.toLowerCase().includes("rent")) ? "Monitor rental market and consider rent adjustments." : "HOLD for long-term appreciation.";
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else if (category === "Car") {
+        const yearMatch = notes.match(/\b(19\d{2}|20\d{2})\b/);
+        if (yearMatch) specificDetails.year = yearMatch[0];
+        shortSummary = `${assetName} (${specificDetails.year || 'N/A'}): Depreciation asset 🚗`;
+        detailedSummary += `Year: ${specificDetails.year || 'N/A'}. ${randomNews} Vehicles typically depreciate. `;
+        aiAction = (specificDetails.year && parseInt(specificDetails.year) < 2010) ? "Consider selling if maintenance is high." : "Maintain well to preserve value.";
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else if (category === "Bank Deposit") {
+        const rateMatch = notes.match(/(\d+(\.\d+)?%\s*(APY)?)/i);
+        if (rateMatch) specificDetails.rate = rateMatch[0].toUpperCase();
+        // Простое извлечение имени банка из начала названия актива
+        const bankNameMatch = assetName.match(/^([a-zA-Z\s]+Bank|[A-Z\s]+Credit Union)/i);
+        if(bankNameMatch) specificDetails.bankName = bankNameMatch[0].trim(); else specificDetails.bankName = "Undisclosed Bank";
+
+        shortSummary = `${assetName} (${specificDetails.bankName || 'N/A'}): ${specificDetails.rate || 'N/A'} 💰`;
+        detailedSummary += `Deposit at ${specificDetails.bankName} with rate ${specificDetails.rate || 'N/A'}. ${randomNews} `;
+        aiAction = (specificDetails.rate && parseFloat(specificDetails.rate) < 2.0) ? "Seek higher yield savings options." : "Stable, low-return asset.";
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else if (category === "Cash") {
+        const currencyMatch = notes.match(/\b(USD|EUR|GBP)\b/i);
+        if(currencyMatch) specificDetails.currency = currencyMatch[0].toUpperCase();
+        shortSummary = `${assetName} (${specificDetails.currency || 'N/A'}): Liquidity 💵`;
+        detailedSummary += `Cash holding. ${randomNews} Good for emergencies but loses value to inflation.`;
+        aiAction = "Maintain for liquidity, consider investing excess.";
+        detailedSummary += ` AI Action: ${aiAction}`;
+    } else {
+        detailedSummary += notes ? ` Notes: ${notes}. ${randomNews}` : randomNews;
+    }
+    
+    // Добавляем извлеченные детали к объекту item, чтобы они были доступны в updateAiAssistant
+    Object.assign(item, specificDetails);
+
+    return { shortSummary, detailedSummary };
+}
+
 function updateAiAssistant(categoryLabel) {
   const aiDynamicDiv = document.getElementById('aiDynamicRecommendations');
   const aiGeneralAdviceP = document.getElementById('aiGeneralAdvice');
@@ -172,20 +266,21 @@ function updateAiAssistant(categoryLabel) {
     const category = breakdownDataMap[categoryLabel];
     if (category && category.data) {
       category.data.forEach((item, index) => {
-        const shortSummary = item.shortSummary || `${item.name}: $${item.value.toLocaleString()}`;
-        const detailedSummary = item.detailedSummary || (item.notes ? item.notes : `Details for ${item.name}.`);
+        // Генерируем shortSummary и detailedSummary на лету для каждого item
+        const insight = getSimulatedAiInsight(categoryLabel, item); 
+
         htmlContent += `
           <div class="ai-item">
-            <p class="ai-short-summary"><strong>${item.name}:</strong> ${shortSummary} 
+            <p class="ai-short-summary"><strong>${item.name}:</strong> ${insight.shortSummary} 
               <button class="show-details-btn" data-category="${categoryLabel}" data-index="${index}">Details</button>
             </p>
             <div class="ai-detailed-summary" id="details-${categoryLabel.replace(/\s+/g, '-')}-${index}" style="display:none;">
-              <p>${detailedSummary}</p>`;
+              <p>${insight.detailedSummary}</p>`;
+        // Можно добавить вывод item.symbol, item.address и т.д. если они были извлечены и сохранены в item
         if (item.symbol) htmlContent += `<p><em>Ticker/Symbol:</em> ${item.symbol}</p>`;
         if (item.address) htmlContent += `<p><em>Address:</em> ${item.address}</p>`;
-        if (item.year) htmlContent += `<p><em>Year:</em> ${item.year}</p>`;
-        if (item.model && categoryLabel === 'Car') htmlContent += `<p><em>Model:</em> ${item.model}</p>`;
-        if (item.bankName) htmlContent += `<p><em>Bank:</em> ${item.bankName} (${item.currentRate || 'N/A rate'})</p>`;
+        if (item.year && categoryLabel === 'Car') htmlContent += `<p><em>Year:</em> ${item.year}</p>`;
+        if (item.bankName && categoryLabel === 'Bank Deposit') htmlContent += `<p><em>Bank:</em> ${item.bankName} (${item.rate || 'N/A'})</p>`;
         htmlContent += `</div></div>`;
       });
       if (categoryLabel === 'Crypto' && category.liveAdvice) {
@@ -233,7 +328,7 @@ function showBreakdown(label) {
     const li = document.createElement('li');
     li.innerHTML = `
       <span class="dot" style="background-color:${color}"></span>
-      <span class="legend-item-text">${item.name} – $${item.value.toLocaleString()}</span>
+      <span class="legend-item-text">${item.name} – $${(item.value || 0).toLocaleString()}</span>
       <img class="edit-btn" data-index="${i}" title="Edit" width="20" height="20" style="cursor:pointer;margin-left:auto;" src="icon_edit_dark_final.png">
       <img class="delete-btn" data-index="${i}" title="Delete" width="20" height="20" style="cursor:pointer;margin-left:6px;" src="icon_delete_dark_final.png">`;
     legendContainer.appendChild(li);
@@ -248,7 +343,7 @@ function showBreakdown(label) {
         openCustomEditPopup(itemToEdit.name, itemToEdit.value, (newName, newValueFloat) => { 
             itemToEdit.name = newName; itemToEdit.value = newValueFloat; 
             const category = breakdownDataMap[currentBreakdownLabel];
-            const sum = category.data.reduce((s, current) => s + current.value, 0);
+            const sum = category.data.reduce((s, current) => s + (current.value || 0), 0);
             category.total = '$' + sum.toLocaleString();
             const mainIdx = mainData.labels.indexOf(currentBreakdownLabel);
             if(mainIdx !== -1) mainData.datasets[0].data[mainIdx] = sum;
@@ -268,7 +363,7 @@ function showBreakdown(label) {
       if (itemToDelete) {
         openDeleteConfirmPopup(itemToDelete.name, () => { 
             category.data.splice(idx, 1); 
-            const sum = category.data.reduce((s, current) => s + current.value, 0);
+            const sum = category.data.reduce((s, current) => s + (current.value || 0), 0);
             category.total = '$' + sum.toLocaleString();
             const mainIdx = mainData.labels.indexOf(currentBreakdownLabel);
             if(mainIdx !== -1) mainData.datasets[0].data[mainIdx] = sum;
@@ -335,16 +430,16 @@ function processExcelData(excelData) {
         if (!row || row.length === 0 || !row[categoryIndex]) continue; 
 
         let category = row[categoryIndex].toString().trim();
-        const matchedLabel = mainData.labels.find(lbl => lbl.toLowerCase() === category.toLowerCase());
+        const originalMainDataLabels = ['House', 'Car', 'Stocks', 'Crypto', 'Bank Deposit', 'Cash'];
+        const matchedLabel = originalMainDataLabels.find(lbl => lbl.toLowerCase() === category.toLowerCase());
         if (matchedLabel) { category = matchedLabel; } 
-        else { category = category.charAt(0).toUpperCase() + category.slice(1); }
+        else { category = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase(); }
 
         const assetName = row[assetNameIndex] ? row[assetNameIndex].toString().trim() : `Asset ${i}`;
         const assetValue = parseFloat(row[valueIndex]);
         const notes = notesIndex !== -1 && row[notesIndex] ? row[notesIndex].toString().trim() : '';
         
         if (isNaN(assetValue)) { console.warn(`Skipping row ${i+1} due to invalid value`); continue; }
-
         newMainDataLabelsSet.add(category); 
 
         if (!newTempBreakdownData[category]) {
@@ -357,23 +452,36 @@ function processExcelData(excelData) {
 
         const assetObject = { name: assetName, value: assetValue, notes: notes };
         
+        // Заполняем объект assetObject извлеченными данными для использования в getSimulatedAiInsight
         if (notes) {
-            assetObject.detailedSummary = notes; 
             if (category === "Stocks" || category === "Crypto") {
-                const tickerMatch = notes.match(/\b([A-Z]{2,5})\b/); 
-                if (tickerMatch) assetObject.symbol = tickerMatch[0]; 
+                const tickerMatch = notes.match(/\b([A-Z]{2,5})\b/i); 
+                if (tickerMatch) assetObject.symbol = tickerMatch[0].toUpperCase();
             } else if (category === "House") {
-                if (/\d/.test(notes) && /[a-zA-Z]/.test(notes) && notes.toLowerCase().includes(',')) assetObject.address = notes; 
+                assetObject.address = notes; 
             } else if (category === "Car") {
                 const yearMatch = notes.match(/\b(19\d{2}|20\d{2})\b/);
                 if (yearMatch) assetObject.year = yearMatch[0];
+                // Пытаемся извлечь модель, если она не часть основного имени актива
+                if (assetName.toLowerCase().includes(notes.toLowerCase())) { 
+                    // Если assetName уже содержит заметку (например, "Toyota Camry 2021")
+                    // то модель, вероятно, часть assetName.
+                    // Эта логика может быть сложной и зависит от формата assetName.
+                } else {
+                    // Если заметки - это чисто модель
+                     // assetObject.model = notes; // Это было бы слишком просто, но для примера
+                }
+
             } else if (category === "Bank Deposit") {
-                const rateMatch = notes.match(/(\d+(\.\d+)?%\s*APY)/i);
-                if (rateMatch) assetObject.currentRate = rateMatch[0];
+                const rateMatch = notes.match(/(\d+(\.\d+)?%\s*(APY)?)/i);
+                if (rateMatch) assetObject.rate = rateMatch[0];
+                const bankNameMatch = notes.match(/^([a-zA-Z\s]+Bank|[A-Z\s]+Credit Union|[a-zA-Z\s]+Financial)/i);
+                if(bankNameMatch) assetObject.bankName = bankNameMatch[0].trim();
+            } else if (category === "Cash") {
+                 const currencyMatch = notes.match(/\b(USD|EUR|GBP)\b/i);
+                 if(currencyMatch) assetObject.currency = currencyMatch[0].toUpperCase();
             }
         }
-        assetObject.shortSummary = `${assetName}: $${assetValue.toLocaleString()}` + (assetObject.symbol ? ` (${assetObject.symbol})` : '');
-        if (!assetObject.detailedSummary) assetObject.detailedSummary = `Details for ${assetName}.`;
         
         newTempBreakdownData[category].data.push(assetObject);
         if (newTempBreakdownData[category].colors.length < newTempBreakdownData[category].data.length) {
@@ -382,10 +490,11 @@ function processExcelData(excelData) {
     }
     
     mainData.labels = Array.from(newMainDataLabelsSet);
-    mainData.datasets[0].backgroundColor = mainData.labels.map((label) => { // Убрал неиспользуемый 'i'
+    const originalColors = ['#a259ff','#f1c40f','#3498db','#2ecc71','#95a5a6', '#fd7e14']; 
+    mainData.datasets[0].backgroundColor = mainData.labels.map((label) => {
         const originalMainDataIndex = ['House', 'Car', 'Stocks', 'Crypto', 'Bank Deposit', 'Cash'].indexOf(label);
-        if(originalMainDataIndex !== -1 && ['#a259ff','#f1c40f','#3498db','#2ecc71','#95a5a6', '#fd7e14'][originalMainDataIndex]){
-            return ['#a259ff','#f1c40f','#3498db','#2ecc71','#95a5a6', '#fd7e14'][originalMainDataIndex];
+        if(originalMainDataIndex !== -1 && originalColors[originalMainDataIndex]){
+            return originalColors[originalMainDataIndex];
         }
         return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
     });
@@ -499,11 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCategoryBreakdown(); 
     updateAiAssistant(null); 
     
-    const initialCategory = Object.keys(breakdownDataMap).length > 0 ? Object.keys(breakdownDataMap)[0] : 'Stocks'; 
-    if (breakdownDataMap && breakdownDataMap[initialCategory]) {
+    const initialCategory = Object.keys(breakdownDataMap).length > 0 && breakdownDataMap['Stocks'] ? 'Stocks' : (Object.keys(breakdownDataMap).length > 0 ? Object.keys(breakdownDataMap)[0] : null);
+    if (initialCategory && breakdownDataMap[initialCategory]) {
         showBreakdown(initialCategory); 
     } else {
-       console.warn(`Initial category "${initialCategory}" not found in breakdownDataMap or breakdownDataMap is empty.`);
+       console.warn(`No initial category to display in breakdown or breakdownDataMap is empty.`);
     }
     console.log("DOMContentLoaded: Script finished.");
 });
