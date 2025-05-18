@@ -13,15 +13,15 @@ const mainData = {
   }]
 };
 
-const breakdownDataMap = {
-  'House': { // ~500,000
+let breakdownDataMap = {
+  'House': { 
     data: [
       { name: 'Primary Home – Palo Alto (Townhouse)', value: 320000, address: '2105 Townhouse Ln, Palo Alto, CA 94303', shortSummary: 'Palo Alto Townhouse: Good entry. 🏠', detailedSummary: 'A modest townhouse located at 2105 Townhouse Ln, Palo Alto, CA 94303. Provides an entry into the desirable Palo Alto market. Area benefits from excellent schools and proximity to tech companies. Potential for steady value increase.' },
       { name: 'Rental Condo – Detroit (Downtown Loft)', value: 180000, address: 'Loft 3D, The Assembly, Detroit, MI 48226', shortSummary: 'Detroit Loft Rental: Cash flow positive. 🏙️', detailedSummary: 'Rental loft in Detroit\'s revitalizing downtown. Affordable investment with good rental yields ($1,500/month). Property taxes are notable, but overall cash-flow positive. Monitor local economic trends.'}
     ],
     colors: ['#a259ff', '#95a5a6'], total: ''
   },
-  'Car': { // ~40,500
+  'Car': { 
     data: [ 
       { name: 'Toyota Camry (2021)', value: 20000, model: 'Camry', year: 2021, shortSummary: 'Toyota Camry (2021): High demand. 🚗 Price: $19k-$21.5k.', detailedSummary: 'Model: Camry, Year: 2021. Market estimate: $19,000 - $21,500. Known for reliability and resale value.'}, 
       { name: 'BMW X5 (2018)', value: 18000, model: 'X5', year: 2018, shortSummary: 'BMW X5 (2018): Moderate demand. Price: $17k-$20k.', detailedSummary: 'Model: X5, Year: 2018. Market estimate: $17,000 - $20,000. Moderate demand for luxury SUVs.'}, 
@@ -29,7 +29,7 @@ const breakdownDataMap = {
     ],
     colors: ['#f39c12', '#2980b9', '#e74c3c'], total: ''
   },
-  'Stocks': { // ~150,000 -> increased to ~200,000
+  'Stocks': { 
     data: [
       { name: 'Apple (AAPL)', value: 50000, symbol: 'AAPL', shortSummary: 'AAPL: Strong ecosystem. HOLD. 🍏', detailedSummary: 'Apple reported strong iPhone sales. Vision Pro reviews mixed. AI Action: Hold. Watch Vision Pro adoption & services.' }, 
       { name: 'Microsoft (MSFT)', value: 45000, symbol: 'MSFT', shortSummary: 'MSFT: Azure & AI dominant. BUY. ☁️', detailedSummary: 'Azure growth impressive. AI (Copilot) focus. Activision integrated. AI Action: Buy on dips.' }, 
@@ -41,7 +41,7 @@ const breakdownDataMap = {
     colors: ['#e74c3c', '#e67e22', '#17a2b8', '#3498db', '#2ecc71', '#a259ff'], 
     total: ''
   },
-  'Crypto': { // ~100,000 -> increased to ~150,000
+  'Crypto': { 
     data: [ 
       { name: 'Bitcoin (BTC)', value: 75000, symbol: 'BTC', shortSummary: 'BTC: Market leader, post-halving potential. HOLD. 📈', detailedSummary: 'Bitcoin leading cryptocurrency. Halving event typically bullish. Regulatory clarity evolving. AI Action: Hold. Monitor. Consider DCA for long term.'}, 
       { name: 'Ethereum (ETH)', value: 50000, symbol: 'ETH', shortSummary: 'ETH: Strong ecosystem, L2 growth. HOLD. 🔗', detailedSummary: 'Ethereum "Merge" successful. L2 solutions scaling network. Strong DeFi/NFT ecosystem. AI Action: Hold. Watch L2 adoption and staking.' },
@@ -50,19 +50,19 @@ const breakdownDataMap = {
     ], 
     liveAdvice: [ 
         { name: 'Bitcoin', currentPrice: '$65,123', change: '+1.52%', trend: 'Uptrend 📈. Monitor volume.'}, 
-        { name: 'Ethereum', currentPrice: '$3,450', change: '+0.88%', trend: 'Stable  sideways. Watch for breakout.'}
+        { name: 'Ethereum', currentPrice: '$3,450', change: '+0.88%', trend: 'Stable sideways. Watch for breakout.'}
     ], 
     colors: ['#f39c12', '#8e44ad', '#20c997', '#6610f2'], 
     total: '' 
   },
-  'Bank Deposit': { // ~150,000 -> increased to ~200,000
+  'Bank Deposit': { 
     data: [ 
       { name: 'High-Yield Savings (Ally Bank)', value: 120000, bankName: 'Ally Bank', currentRate: '4.20% APY', shortSummary: 'Ally Savings (4.20%): Good for liquid cash. 💰', detailedSummary: 'Held at Ally Bank. Current rate of 4.20% APY is competitive for liquid funds. FDIC insured.' }, 
       { name: 'CD (Marcus by Goldman Sachs)', value: 80000, bankName: 'Marcus by Goldman Sachs', currentRate: '5.00% APY (1-year CD)', shortSummary: 'Marcus CD (5.00%): Strong fixed rate. 🔒', detailedSummary: '1-year CD at Marcus, offering 5.00% APY. Good for locking in rate for funds not needed immediately.' } 
     ],
     colors: ['#16a085', '#27ae60'], total: ''
   },
-  'Cash': { // ~59,500 -> Total around ~1,100,000
+  'Cash': { 
     data: [
       { name: 'USD Physical & Checking', value: 40000, currency: 'USD', shortSummary: 'USD Cash: Liquidity/emergencies. 💵', detailedSummary: 'Physical USD and checking account balance for immediate liquidity and emergency preparedness. Does not earn significant interest.'},
       { name: 'EUR Savings (Wise Account)', value: 19500, currency: 'EUR', shortSummary: 'EUR Cash (Wise): Travel/diversification. 💶', detailedSummary: 'Euros in Wise multi-currency account for travel and currency diversification. Check for interest offered on EUR balances.'}
@@ -79,12 +79,12 @@ function initializeChartData() {
   Object.keys(breakdownDataMap).forEach(categoryKey => {
     const category = breakdownDataMap[categoryKey];
     if (!category || !category.data) { console.warn(`Category or data missing for key: ${categoryKey}`); return; }
-    const categorySum = category.data.reduce((sum, item) => sum + item.value, 0);
+    const categorySum = category.data.reduce((sum, item) => sum + (item.value || 0), 0);
     category.total = '$' + categorySum.toLocaleString();
     const mainDataIndex = mainData.labels.indexOf(categoryKey);
     if (mainDataIndex !== -1) {
       if (!mainData.datasets[0]) mainData.datasets[0] = { data: new Array(mainData.labels.length).fill(0) };
-      if (mainData.datasets[0].data.length < mainData.labels.length) {
+      if (mainData.datasets[0].data.length !== mainData.labels.length) {
           mainData.datasets[0].data = new Array(mainData.labels.length).fill(0);
       }
       mainData.datasets[0].data[mainDataIndex] = categorySum;
@@ -96,8 +96,7 @@ function initializeChartData() {
 function updateCategoryBreakdown() {
   const legendList = document.getElementById('legendList');
   if (!legendList) return;
-  
-  legendList.innerHTML = ''; // Очищаем и перестраиваем легенду каждый раз
+  legendList.innerHTML = ''; 
   mainData.labels.forEach((label, i) => {
       const value = (mainData.datasets && mainData.datasets[0] && mainData.datasets[0].data && typeof mainData.datasets[0].data[i] !== 'undefined') ? mainData.datasets[0].data[i] : 0;
       const colorHex = (mainData.datasets && mainData.datasets[0] && mainData.datasets[0].backgroundColor && mainData.datasets[0].backgroundColor[i]) ? mainData.datasets[0].backgroundColor[i] : '#ccc';
@@ -111,7 +110,7 @@ function updateTotalAssets() {
   let total = 0;
   Object.keys(breakdownDataMap).forEach(categoryKey => {
     const category = breakdownDataMap[categoryKey];
-    if (category && category.data) { // Добавлена проверка
+    if (category && category.data) { 
         total += category.data.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
     }
   });
@@ -125,7 +124,6 @@ function updateTotalAssets() {
 function createPercentageDoughnut(ctx, labels, dataValues, colors, chartWidth, chartHeight, onClickHandler = null) {
   if (typeof Chart === 'undefined' || typeof ChartDataLabels === 'undefined' || !ctx) { return null; }
   if (!ctx.canvas) { return null;}
-  
   ctx.canvas.width = chartWidth; ctx.canvas.height = chartHeight;
   ctx.canvas.style.width = `${chartWidth}px`; ctx.canvas.style.height = `${chartHeight}px`;
   try {
@@ -164,7 +162,6 @@ function updateAiAssistant(categoryLabel) {
   const aiDynamicDiv = document.getElementById('aiDynamicRecommendations');
   const aiGeneralAdviceP = document.getElementById('aiGeneralAdvice');
   if (!aiDynamicDiv || !aiGeneralAdviceP) { return; }
-
   let htmlContent = '';
   if (!categoryLabel) {
     aiGeneralAdviceP.style.display = 'block';
@@ -175,34 +172,34 @@ function updateAiAssistant(categoryLabel) {
     const category = breakdownDataMap[categoryLabel];
     if (category && category.data) {
       category.data.forEach((item, index) => {
+        const shortSummary = item.shortSummary || `${item.name}: $${item.value.toLocaleString()}`;
+        const detailedSummary = item.detailedSummary || (item.notes ? item.notes : `Details for ${item.name}.`);
         htmlContent += `
           <div class="ai-item">
-            <p class="ai-short-summary"><strong>${item.name}:</strong> ${item.shortSummary || 'N/A'} 
+            <p class="ai-short-summary"><strong>${item.name}:</strong> ${shortSummary} 
               <button class="show-details-btn" data-category="${categoryLabel}" data-index="${index}">Details</button>
             </p>
             <div class="ai-detailed-summary" id="details-${categoryLabel.replace(/\s+/g, '-')}-${index}" style="display:none;">
-              <p>${item.detailedSummary || 'No detailed information available.'}</p>
-            </div>
-          </div>`;
+              <p>${detailedSummary}</p>`;
+        if (item.symbol) htmlContent += `<p><em>Ticker/Symbol:</em> ${item.symbol}</p>`;
+        if (item.address) htmlContent += `<p><em>Address:</em> ${item.address}</p>`;
+        if (item.year) htmlContent += `<p><em>Year:</em> ${item.year}</p>`;
+        if (item.model && categoryLabel === 'Car') htmlContent += `<p><em>Model:</em> ${item.model}</p>`;
+        if (item.bankName) htmlContent += `<p><em>Bank:</em> ${item.bankName} (${item.currentRate || 'N/A rate'})</p>`;
+        htmlContent += `</div></div>`;
       });
       if (categoryLabel === 'Crypto' && category.liveAdvice) {
         htmlContent += `<h4>Live Crypto Prices:</h4>`;
         category.liveAdvice.forEach(advice => { htmlContent += `<p><strong>${advice.name}:</strong> ${advice.currentPrice} (${advice.change}) – ${advice.trend}</p>`; });
       }
-    } else { htmlContent += `<p>No specific advice available for ${categoryLabel}.</p>`; }
+    } else { htmlContent += `<p>No specific breakdown data available for ${categoryLabel}.</p>`; }
   }
   aiDynamicDiv.innerHTML = htmlContent;
-
   aiDynamicDiv.querySelectorAll('.show-details-btn').forEach(btn => {
     btn.onclick = (e) => {
-      const cat = e.target.dataset.category;
-      const itemIdx = e.target.dataset.index;
+      const cat = e.target.dataset.category; const itemIdx = e.target.dataset.index;
       const detailsDiv = document.getElementById(`details-${cat.replace(/\s+/g, '-')}-${itemIdx}`);
-      if (detailsDiv) {
-        const isVisible = detailsDiv.style.display === 'block';
-        detailsDiv.style.display = isVisible ? 'none' : 'block';
-        e.target.textContent = isVisible ? 'Details' : 'Hide';
-      }
+      if (detailsDiv) { const isVisible = detailsDiv.style.display === 'block'; detailsDiv.style.display = isVisible ? 'none' : 'block'; e.target.textContent = isVisible ? 'Details' : 'Hide'; }
     };
   });
 }
@@ -286,6 +283,136 @@ function showBreakdown(label) {
   updateAiAssistant(label); 
 }
 
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) { return; }
+    const fileName = file.name.toLowerCase();
+    if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls') || fileName.endsWith('.csv')) { 
+        parseExcelFile(file);
+    } else if (file.type.startsWith('image/')) {
+        alert("OCR processing for images is a separate feature and not connected to this upload button yet.");
+    } else {
+        alert("Unsupported file type. Please upload an Excel (.xlsx, .xls, .csv) file.");
+    }
+    event.target.value = '';
+}
+
+function parseExcelFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, {header:1}); 
+            processExcelData(jsonData);
+        } catch (error) { console.error("Error processing Excel file:", error); alert("Error processing Excel file.");}
+    };
+    reader.onerror = function(ex) { console.error("FileReader error:", ex); alert("Error reading file.");};
+    reader.readAsArrayBuffer(file);
+}
+
+function processExcelData(excelData) {
+    if (!excelData || excelData.length < 2) { alert("Excel file is empty or has an invalid format."); return; }
+
+    const headers = excelData[0].map(h => h ? h.toString().trim().toLowerCase() : '');
+    const categoryIndex = headers.indexOf('category');
+    const assetNameIndex = headers.indexOf('asset name');
+    const valueIndex = headers.indexOf('value');
+    const notesIndex = headers.indexOf('notes (optional - for extra details like ticker, address, bank, year, etc.)');
+
+    if (categoryIndex === -1 || assetNameIndex === -1 || valueIndex === -1) {
+        alert("Required columns (Category, Asset Name, Value) not found in Excel. Please use the template.");
+        return;
+    }
+
+    const newTempBreakdownData = {};
+    const newMainDataLabelsSet = new Set(); 
+
+    for (let i = 1; i < excelData.length; i++) {
+        const row = excelData[i];
+        if (!row || row.length === 0 || !row[categoryIndex]) continue; 
+
+        let category = row[categoryIndex].toString().trim();
+        const matchedLabel = mainData.labels.find(lbl => lbl.toLowerCase() === category.toLowerCase());
+        if (matchedLabel) { category = matchedLabel; } 
+        else { category = category.charAt(0).toUpperCase() + category.slice(1); }
+
+        const assetName = row[assetNameIndex] ? row[assetNameIndex].toString().trim() : `Asset ${i}`;
+        const assetValue = parseFloat(row[valueIndex]);
+        const notes = notesIndex !== -1 && row[notesIndex] ? row[notesIndex].toString().trim() : '';
+        
+        if (isNaN(assetValue)) { console.warn(`Skipping row ${i+1} due to invalid value`); continue; }
+
+        newMainDataLabelsSet.add(category); 
+
+        if (!newTempBreakdownData[category]) {
+            const existingMainDataCatIndex = mainData.labels.indexOf(category);
+            let colorForNewCategory = (existingMainDataCatIndex !== -1 && mainData.datasets[0].backgroundColor[existingMainDataCatIndex]) ?
+                                     mainData.datasets[0].backgroundColor[existingMainDataCatIndex] :
+                                     '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            newTempBreakdownData[category] = { data: [], colors: [colorForNewCategory], total: '' };
+        }
+
+        const assetObject = { name: assetName, value: assetValue, notes: notes };
+        
+        if (notes) {
+            assetObject.detailedSummary = notes; 
+            if (category === "Stocks" || category === "Crypto") {
+                const tickerMatch = notes.match(/\b([A-Z]{2,5})\b/); 
+                if (tickerMatch) assetObject.symbol = tickerMatch[0]; 
+            } else if (category === "House") {
+                if (/\d/.test(notes) && /[a-zA-Z]/.test(notes) && notes.toLowerCase().includes(',')) assetObject.address = notes; 
+            } else if (category === "Car") {
+                const yearMatch = notes.match(/\b(19\d{2}|20\d{2})\b/);
+                if (yearMatch) assetObject.year = yearMatch[0];
+            } else if (category === "Bank Deposit") {
+                const rateMatch = notes.match(/(\d+(\.\d+)?%\s*APY)/i);
+                if (rateMatch) assetObject.currentRate = rateMatch[0];
+            }
+        }
+        assetObject.shortSummary = `${assetName}: $${assetValue.toLocaleString()}` + (assetObject.symbol ? ` (${assetObject.symbol})` : '');
+        if (!assetObject.detailedSummary) assetObject.detailedSummary = `Details for ${assetName}.`;
+        
+        newTempBreakdownData[category].data.push(assetObject);
+        if (newTempBreakdownData[category].colors.length < newTempBreakdownData[category].data.length) {
+             newTempBreakdownData[category].colors.push('#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'));
+        }
+    }
+    
+    mainData.labels = Array.from(newMainDataLabelsSet);
+    mainData.datasets[0].backgroundColor = mainData.labels.map((label) => { // Убрал неиспользуемый 'i'
+        const originalMainDataIndex = ['House', 'Car', 'Stocks', 'Crypto', 'Bank Deposit', 'Cash'].indexOf(label);
+        if(originalMainDataIndex !== -1 && ['#a259ff','#f1c40f','#3498db','#2ecc71','#95a5a6', '#fd7e14'][originalMainDataIndex]){
+            return ['#a259ff','#f1c40f','#3498db','#2ecc71','#95a5a6', '#fd7e14'][originalMainDataIndex];
+        }
+        return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    });
+    mainData.datasets[0].data = new Array(mainData.labels.length).fill(0);
+
+    breakdownDataMap = newTempBreakdownData; 
+
+    initializeChartData(); 
+    updateCategoryBreakdown(); 
+
+    if (mainChart) {
+        mainChart.data.labels = mainData.labels;
+        mainChart.data.datasets[0].data = mainData.datasets[0].data;
+        mainChart.data.datasets[0].backgroundColor = mainData.datasets[0].backgroundColor;
+        mainChart.update();
+    }
+
+    const firstUploadedCategory = Object.keys(breakdownDataMap)[0];
+    if (firstUploadedCategory) {
+        showBreakdown(firstUploadedCategory);
+    } else {
+        if(document.getElementById('breakdownCard')) document.getElementById('breakdownCard').classList.remove('visible');
+        updateAiAssistant(null);
+    }
+    alert("Assets successfully updated from Excel file!");
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOMContentLoaded: Script starting.");
@@ -293,7 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.innerHTML = "<p style='color:red;'>Error: Chart.js library failed to load.</p>"; return;
     }
 
-    // Инициализация попапа редактирования
     editPopupOverlayGlobal = document.getElementById("editPopupOverlay"); 
     if (editPopupOverlayGlobal) {
         editNameInputGlobal = editPopupOverlayGlobal.querySelector("#editName"); 
@@ -315,7 +441,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { console.warn("Some Edit popup controls missing inside #editPopupOverlay."); }
     } else { console.warn("Edit popup overlay missing (#editPopupOverlay)."); }
 
-    // Инициализация попапа подтверждения удаления
     deleteConfirmPopupOverlayGlobal = document.getElementById("deleteConfirmPopupOverlay");
     if (deleteConfirmPopupOverlayGlobal) {
         deleteConfirmMessageGlobal = deleteConfirmPopupOverlayGlobal.querySelector("#deleteConfirmMessage");
@@ -336,6 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else { console.warn("Some Delete confirm popup controls missing inside #deleteConfirmPopupOverlay."); }
     } else { console.warn("Delete confirm popup overlay missing (#deleteConfirmPopupOverlay)."); }
 
+    const fileUploadInput = document.getElementById('uploadFile');
+    if (fileUploadInput) {
+        fileUploadInput.addEventListener('change', handleFileUpload);
+    } else {
+        console.warn("File upload input (#uploadFile) not found.");
+    }
 
     const mainChartCanvas = document.getElementById('mainChart');
     if (!mainChartCanvas) { console.error("FATAL: Main chart canvas element (#mainChart) not found!"); return;}
@@ -368,12 +499,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCategoryBreakdown(); 
     updateAiAssistant(null); 
     
-    const initialCategory = 'Stocks'; 
+    const initialCategory = Object.keys(breakdownDataMap).length > 0 ? Object.keys(breakdownDataMap)[0] : 'Stocks'; 
     if (breakdownDataMap && breakdownDataMap[initialCategory]) {
         showBreakdown(initialCategory); 
     } else {
-        const firstKey = breakdownDataMap ? Object.keys(breakdownDataMap)[0] : null;
-        if (firstKey) { showBreakdown(firstKey); }
+       console.warn(`Initial category "${initialCategory}" not found in breakdownDataMap or breakdownDataMap is empty.`);
     }
     console.log("DOMContentLoaded: Script finished.");
 });

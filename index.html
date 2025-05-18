@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wealth Dashboard</title>
   <link rel="stylesheet" href="style.css"/>
+  <!-- Подключение SheetJS (js-xlsx) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -33,19 +35,25 @@
     <section class="card visible ai-card" id="aiCard">
       <h1>AI Assistant</h1>
       <p id="aiGeneralAdvice"><strong>General Advice:</strong> Diversification is key to a healthy portfolio. Regularly review your asset allocation.</p>
-      
       <div id="aiDynamicRecommendations">
-        <!-- Динамический контент появится здесь -->
+        <!-- Динамический контент -->
       </div>
     </section>
   </div>
 
   <section class="upload-section">
-    <h2>Upload screenshot with asset values</h2>
-    <input accept="image/*" id="uploadImage" type="file"/>
-    <p style="margin-top:1rem;color:#888">Uses OCR to read and update pie chart</p>
+    <h2>Upload Your Assets</h2>
+    <div class="file-upload-container"> <!-- Обертка для кнопок -->
+        <div class="file-upload-wrapper">
+            <label for="uploadFile" class="file-upload-btn">Choose File</label>
+            <input type="file" id="uploadFile" accept=".xlsx, .xls, .csv"/>
+        </div>
+        <a href="assets_template.xlsx" download="assets_template.xlsx" class="template-download-btn">Download Template (.xlsx)</a>
+    </div>
+    <p style="margin-top:1rem;color:#888">Upload an Excel/CSV file (using the template is recommended).</p>
   </section>
 
+  <!-- Остальные скрипты -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://unpkg.com/tesseract.js@5.0.1/dist/tesseract.min.js"></script>

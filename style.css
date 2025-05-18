@@ -10,7 +10,7 @@ body {
   flex-wrap: wrap; 
   justify-content: center; 
   gap: 2rem;
-  align-items: stretch; /* Это заставит карточки растягиваться по высоте самой высокой */
+  align-items: stretch; 
 }
 .card {
   background-color: #111;
@@ -26,12 +26,12 @@ body {
   font-size: 1.5rem;
   margin-top: 0;
   margin-bottom: 1rem; 
-  text-align: left; /* Вернули выравнивание по левому краю */
+  text-align: left; 
 }
 .card .total, .card .status {
   margin-top: 0; 
   margin-bottom: 0.5rem; 
-  text-align: left; /* Вернули выравнивание по левому краю */
+  text-align: left; 
 }
 .card .total strong, .card .status strong {
     display: block; 
@@ -41,13 +41,13 @@ body {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
-  text-align: left; /* Вернули выравнивание по левому краю */
+  text-align: left; 
 }
 .card p { 
   font-size: 0.95rem;
   line-height: 1.4;
   margin-bottom: 0.75rem; 
-  text-align: left; /* Вернули выравнивание по левому краю */
+  text-align: left; 
 }
 .ai-card h1 + p#aiGeneralAdvice { 
     margin-top: 0.5rem;
@@ -58,8 +58,6 @@ body {
   padding: 0;
   margin-top: 0.5rem; 
   width: 100%; 
-  /* flex-grow: 1; /* Убрал, чтобы легенда не растягивалась чрезмерно, если мало элементов */
-  /* overflow-y: auto; */
 }
 .legend li {
   margin: 0.3rem 0;
@@ -74,7 +72,13 @@ body {
     flex-grow: 1; 
 }
 .dot { height: 10px; width: 10px; display: inline-block; border-radius: 50%; margin-right: 8px; flex-shrink: 0;}
-.purple { background-color: #a259ff; } .gold { background-color: #f1c40f; } .blue { background-color: #3498db; } .green { background-color: #2ecc71; } .grey { background-color: #95a5a6; } .red { background-color: #e74c3c; } .orange { background-color: #e67e22; }
+.purple { background-color: #a259ff; } 
+.gold { background-color: #f1c40f; } 
+.blue { background-color: #3498db; } 
+.green { background-color: #2ecc71; } 
+.grey { background-color: #95a5a6; } 
+.red { background-color: #e74c3c; } 
+.orange { background-color: #fd7e14; } 
 
 .chart-total {
   text-align: center; 
@@ -89,11 +93,69 @@ body {
   width: 320px !important;  
   height: 320px !important; 
   display: block; 
-  margin: 0.5em auto; /* Уменьшен отступ для лучшего выравнивания */
+  margin: 0.5em auto; 
   flex-shrink: 0; 
 }
 
-.upload-section { margin-top: 3rem; background-color: #111; padding: 2rem; border-radius: 16px; text-align: center; }
+.upload-section { 
+  margin-top: 3rem; 
+  background-color: #111; 
+  padding: 2rem; 
+  border-radius: 16px; 
+  text-align: center; 
+}
+
+.upload-section .file-upload-container {
+    margin-bottom: 0.5rem; /* Отступ под блоком кнопок */
+}
+
+.upload-section .file-upload-wrapper,
+.upload-section .template-download-btn {
+    display: inline-block;
+    vertical-align: top; /* Выравнивание по верху, если кнопки разной высоты */
+}
+
+.file-upload-btn { /* Стилизуем label как кнопку */
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #007bff; 
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none; 
+}
+.file-upload-btn:hover {
+  background-color: #0056b3;
+}
+
+.upload-section input[type="file"]#uploadFile { /* Скрываем настоящий input */
+  width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.upload-section .template-download-btn {
+  display: inline-block; 
+  margin-left: 10px; 
+  padding: 8px 15px;
+  background-color: #007bff; 
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+.upload-section .template-download-btn:hover {
+  background-color: #0056b3;
+}
+
 .ai-card {} 
 
 #breakdownCard.visible, .ai-card.visible {
@@ -103,7 +165,7 @@ body {
   transform: scale(1) !important;
 }
 
-#aiCard #aiDynamicRecommendations { /* Блок с AI рекомендациями должен растягиваться */
+#aiCard #aiDynamicRecommendations {
     flex-grow: 1;
     overflow-y: auto; 
 }
@@ -116,7 +178,7 @@ body {
 .popup-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(3px); }
 .popup { background-color: #1e1e1e; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4); width: 340px; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; border: 1px solid #333; }
 .popup h2 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.4rem; color: #b388ff; text-align: center; font-weight: 600; }
-.popup p#deleteConfirmMessage { /* Специфичный стиль для текста подтверждения */ text-align: center; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.5; }
+.popup p#deleteConfirmMessage { text-align: center; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.5; }
 .popup label { display: block; margin-top: 1rem; margin-bottom: 0.25rem; font-size: 0.9rem; color: #bbb; font-weight: 500; }
 .popup input[type="text"], .popup input[type="number"] { width: calc(100% - 1.2rem); padding: 0.6rem; margin-top: 0.2rem; border: 1px solid #444; border-radius: 8px; background: #282828; color: #e0e0e0; font-size: 0.95rem; }
 .popup input[type="text"]:focus, .popup input[type="number"]:focus { outline: none; border-color: #b388ff; box-shadow: 0 0 0 2px rgba(179, 136, 255, 0.3); }
